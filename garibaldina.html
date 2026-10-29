@@ -10,53 +10,68 @@
 <meta name="theme-color" content="#c4262e">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
-<title>Calendario Garibaldina Primi Calci</title>
+<title>Agenda di Matteo</title>
 <style>*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
-/* Layout: colonna unica da cartellino partita, una riga per giornata, poi calendario completo e campi */
+/* Layout: colonna unica, due schede (Calcio / Catechismo), una riga per appuntamento */
 :root{
   --bg:#f3f5f1; --card:#ffffff; --fg:#1d2420; --muted:#5d6a62; --line:#d9dfd8;
   --red:#c4262e; --red-soft:#fbe9ea; --grass:#2f7a4b; --grass-soft:#e4f1e8;
+  --violet:#6b4aa0; --violet-soft:#efe9f7; --gold:#93650f; --gold-soft:#f8eed8;
   --display:"Barlow Condensed","Arial Narrow",sans-serif;
   --body:"Source Sans 3",system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#141916; --card:#1d2420; --fg:#e8ede9; --muted:#9aa8a0; --line:#2e3832;
-  --red:#ef5a60; --red-soft:#3a1f21; --grass:#5fbf84; --grass-soft:#1b3326; color-scheme:dark}}
+  --red:#ef5a60; --red-soft:#3a1f21; --grass:#5fbf84; --grass-soft:#1b3326;
+  --violet:#b79be6; --violet-soft:#2b2338; --gold:#e3b45a; --gold-soft:#352a14; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#141916; --card:#1d2420; --fg:#e8ede9; --muted:#9aa8a0; --line:#2e3832;
-  --red:#ef5a60; --red-soft:#3a1f21; --grass:#5fbf84; --grass-soft:#1b3326; color-scheme:dark}
+  --red:#ef5a60; --red-soft:#3a1f21; --grass:#5fbf84; --grass-soft:#1b3326;
+  --violet:#b79be6; --violet-soft:#2b2338; --gold:#e3b45a; --gold-soft:#352a14; color-scheme:dark}
 body{background:var(--bg);color:var(--fg);font:16px/1.45 var(--body)}
-.wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px;display:grid;gap:28px}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px;display:grid;gap:24px}
 h1,h2{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;letter-spacing:.01em}
 h1{font-size:2.3rem;line-height:1;text-transform:uppercase}
 h1 span{color:var(--red)}
 h2{font-size:1.35rem;text-transform:uppercase;letter-spacing:.04em}
 .sub{color:var(--muted);margin:6px 0 0}
 .tag{font:500 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:5px}
+.tabs button{font:700 1.15rem var(--display);text-transform:uppercase;letter-spacing:.05em;border:0;border-radius:8px;padding:10px 8px;background:transparent;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--fg);color:var(--bg)}
+.tabs button:focus-visible,.chips button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.panel{display:grid;gap:24px}
 .list{display:grid;gap:10px}
 .m{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
 .m.next{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+.m.past{opacity:.55}
 .d{text-align:center;font-family:var(--display);line-height:1;border-right:1px solid var(--line);padding-right:10px}
-.d .g{display:block;font:500 .65rem var(--mono);color:var(--muted);letter-spacing:.05em}
+.d .g{display:block;font:500 .65rem var(--mono);color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
 .d .n{display:block;font-size:2rem;font-weight:700;margin-top:4px}
 .d .mo{display:block;font-size:.95rem;text-transform:uppercase;color:var(--muted)}
 .info{min-width:0;display:grid;gap:4px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .pill{font:500 .68rem var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:99px}
-.casa{background:var(--grass-soft);color:var(--grass)}
-.fuori{background:var(--red-soft);color:var(--red)}
+.casa,.k{background:var(--grass-soft);color:var(--grass)}
+.fuori,.gg{background:var(--red-soft);color:var(--red)}
+.ini{background:var(--violet-soft);color:var(--violet)}
+.fam,.festa{background:var(--gold-soft);color:var(--gold)}
 .ripo{background:var(--line);color:var(--muted)}
 .prox{background:var(--red);color:#fff}
 .vs{font-weight:600;font-size:1.08rem}
 .vs b{color:var(--red)}
 .time{font:500 .9rem var(--mono);font-variant-numeric:tabular-nums}
 .where{color:var(--muted);font-size:.92rem}
-.where a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
+.where a,a.where{color:var(--muted);text-decoration-color:var(--line);text-underline-offset:3px}
 .where a:hover,.where a:focus-visible{color:var(--fg)}
 .note{font-size:.88rem;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:0}
+.mh{font:500 .78rem var(--mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:8px 0 -2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:600 .9rem var(--body);border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:99px;padding:6px 12px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--grass);border-color:var(--grass);color:var(--card)}
 details{background:var(--card);border:1px solid var(--line);border-radius:10px}
 summary{cursor:pointer;padding:12px 14px;font-family:var(--display);font-weight:700;font-size:1.15rem;text-transform:uppercase;letter-spacing:.04em}
 summary:focus-visible{outline:2px solid var(--red);outline-offset:2px}
@@ -71,6 +86,7 @@ summary:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .c:last-child{border-bottom:0}
 .c strong{display:block}
 .c.us strong{color:var(--red)}
+.legend{display:grid;gap:6px;font-size:.92rem}
 footer{font-size:.8rem;color:var(--muted)}
 </style>
 
@@ -78,31 +94,88 @@ footer{font-size:.8rem;color:var(--muted)}
 <body>
 <div class="wrap">
   <header>
-    <div class="tag" style="color:var(--muted)">FIGC LND · Comitato Lombardia · Girone 72</div>
-    <h1>Garibaldina <span>1932</span></h1>
-    <p class="sub">Primi Calci 8 anni · 5 contro 5 · Autunno, Milano. Tutte le giornate sono di sabato.</p>
+    <div class="tag" style="color:var(--muted)">Stagione 2026 – 2027 · Milano</div>
+    <h1>Agenda di <span>Matteo</span></h1>
+    <p class="sub">Partite della Garibaldina e incontri del catechismo di 3ª elementare.</p>
   </header>
 
-  <section class="list" aria-label="Partite della Garibaldina">
-    <h2>Le nostre partite</h2>
-    <div id="matches"></div>
-    <p class="note">Il calendario ufficiale indica genericamente ore 14:30; l'orario mostrato è quello del campo di casa dall'elenco campi FIGC. Conviene confermarlo con il mister qualche giorno prima.</p>
-  </section>
+  <div class="tabs" role="tablist" aria-label="Sezioni">
+    <button id="tab-calcio" role="tab" aria-controls="calcio" aria-selected="true">Calcio</button>
+    <button id="tab-catechismo" role="tab" aria-controls="catechismo" aria-selected="false">Catechismo</button>
+  </div>
 
-  <details>
-    <summary>Calendario completo del girone</summary>
-    <div class="dbody" id="full"></div>
-  </details>
+  <!-- ===== CALCIO ===== -->
+  <div class="panel" id="calcio" role="tabpanel" aria-labelledby="tab-calcio">
+    <section class="list" aria-label="Partite della Garibaldina">
+      <h2>Garibaldina 1932 · le nostre partite</h2>
+      <p class="sub" style="margin:0">Primi Calci 8 anni · 5 contro 5 · Girone 72. Tutte le giornate sono di sabato.</p>
+      <div id="matches"></div>
+      <p class="note">Il calendario ufficiale indica genericamente ore 14:30; l'orario mostrato è quello del campo di casa dall'elenco campi FIGC. Conviene confermarlo con il mister qualche giorno prima.</p>
+    </section>
+    <details>
+      <summary>Calendario completo del girone</summary>
+      <div class="dbody" id="full"></div>
+    </details>
+    <details>
+      <summary>Campi da gioco</summary>
+      <div class="dbody campi" id="campi"></div>
+    </details>
+    <footer>Fonte: calendario FIGC "Primi Calci 8 anni 5v5 AUT.-MI", girone 72, aggiornato al 07/10/2026. Girone di ritorno non ancora pubblicato.</footer>
+  </div>
 
-  <details>
-    <summary>Campi da gioco</summary>
-    <div class="dbody campi" id="campi"></div>
-  </details>
-
-  <footer>Fonte: calendario FIGC "Primi Calci 8 anni 5v5 AUT.-MI", girone 72, aggiornato al 07/10/2026. Girone di ritorno non ancora pubblicato.</footer>
+  <!-- ===== CATECHISMO ===== -->
+  <div class="panel" id="catechismo" role="tabpanel" aria-labelledby="tab-catechismo" hidden>
+    <section class="list" aria-label="Incontri del catechismo">
+      <h2>Catechismo · 3ª elementare</h2>
+      <p class="sub" style="margin:0">Cammino di fede dell'iniziazione cristiana, anno pastorale 2026 – 2027.</p>
+      <div class="chips" role="group" aria-label="Filtra">
+        <button id="f-all" data-f="all" aria-pressed="true">Tutto</button>
+        <button id="f-kid" data-f="kid" aria-pressed="false">Solo Matteo</button>
+        <button id="f-gg" data-f="gg" aria-pressed="false">Con i genitori</button>
+      </div>
+      <div id="cat"></div>
+      <p class="note">Il PDF indica Pasqua al 29 marzo, ma nel 2027 cade domenica 28: qui è segnata il 28.</p>
+    </section>
+    <details>
+      <summary>Legenda e luoghi</summary>
+      <div class="dbody legend">
+        <div><span class="pill k">Bambini</span> incontro di catechismo per i bambini (K3)</div>
+        <div><span class="pill gg">Con genitori</span> bambini insieme ai genitori (K3 + GG)</div>
+        <div><span class="pill ini">Avvento / Quaresima</span> iniziative del pomeriggio per i bambini</div>
+        <div><span class="pill fam">Famiglie</span> preghiere e celebrazioni aperte a tutti</div>
+        <div><span class="pill festa">Comunità</span> feste e domeniche insieme</div>
+        <div class="c" style="margin-top:6px"><strong>SV · Sacro Volto</strong><a class="where" id="map-sv" target="_blank" rel="noopener">Apri in Maps</a></div>
+        <div class="c"><strong>SMF · Santa Maria alla Fontana</strong><a class="where" id="map-smf" target="_blank" rel="noopener">Apri in Maps</a></div>
+      </div>
+    </details>
+    <footer>Fonte: "Calendario degli incontri per il cammino di fede dell'iniziazione cristiana", 3ª elementare, anno pastorale 2026 – 2027.</footer>
+  </div>
 </div>
 
 <script>
+/* ---------- comune ---------- */
+const MESI=["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+const MESI_L=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+const GIORNI=["dom","lun","mar","mer","gio","ven","sab"];
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today=new Date(); today.setHours(0,0,0,0);
+
+/* ---------- schede ---------- */
+const TABS=["calcio","catechismo"];
+function show(t){
+  if(!TABS.includes(t)) t="calcio";
+  TABS.forEach(x=>{
+    document.getElementById(x).hidden=x!==t;
+    document.getElementById("tab-"+x).setAttribute("aria-selected",x===t);
+  });
+}
+TABS.forEach(x=>document.getElementById("tab-"+x).addEventListener("click",()=>{
+  show(x); try{history.replaceState(null,"","#"+x)}catch(e){location.hash=x}
+}));
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
+show(location.hash.slice(1));
+
+/* ---------- CALCIO ---------- */
 const CAMPI={
  "CITTA DI OPERA":{n:"C.S. Comunale n.1 (E.A.)",l:"Opera",a:"Via F.lli Cervi 8/10",o:"11:00",t:"02 57610213"},
  "CLUB MILANO":{n:"Comunale \"G. Brera\" Campo 1 (E.A.)",l:"Pero",a:"Via Giovanni XXIII 6",o:"10:00",t:"02 97288476"},
@@ -127,10 +200,7 @@ const G=[
  ["2026-12-12",[["ACCADEMIA INTERNAZIONALE","CLUB MILANO"],["ALCIONE TALENT","GARIBALDINA 1932"],["ORIONE","VIGHIGNOLO SQ.B"],["SEGURO SQ.B","CITTA DI OPERA"]],"SEDRIANO"]
 ];
 const NICE={"CITTA DI OPERA":"Città di Opera","CLUB MILANO":"Club Milano","ORIONE":"Orione","VIGHIGNOLO SQ.B":"Vighignolo Sq.B","ACCADEMIA INTERNAZIONALE":"Accademia Internazionale","GARIBALDINA 1932":"Garibaldina 1932","SEDRIANO":"Sedriano","SEGURO SQ.B":"Seguro Sq.B","ALCIONE TALENT":"Alcione Talent"};
-const MESI=["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
-const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const maps=c=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(c.a+", "+c.l.replace(/ (fr\.|loc\.).*/,""));
-const today=new Date(); today.setHours(0,0,0,0);
 let nextDone=false, html="";
 G.forEach(([date,games,rest],i)=>{
   const d=new Date(date+"T12:00:00"); const past=d<today;
@@ -145,16 +215,105 @@ G.forEach(([date,games,rest],i)=>{
     <div class="vs">${home?"<b>Garibaldina</b> – "+NICE[opp]:NICE[opp]+" – <b>Garibaldina</b>"}</div>
     <div class="where">${esc(c.n)}<br><a href="${maps(c)}" target="_blank" rel="noopener">${esc(c.a)}, ${esc(c.l)}</a></div>`;
   }
-  html+=`<article class="m${isNext?" next":""}"${past?' style="opacity:.55"':""}><div class="d"><span class="g">G${i+1}</span><span class="n">${d.getDate()}</span><span class="mo">${MESI[d.getMonth()]}</span></div><div class="info">${body}</div></article>`;
+  html+=`<article class="m${isNext?" next":""}${past?" past":""}"><div class="d"><span class="g">G${i+1}</span><span class="n">${d.getDate()}</span><span class="mo">${MESI[d.getMonth()]}</span></div><div class="info">${body}</div></article>`;
 });
 document.getElementById("matches").innerHTML=`<div class="list">${html}</div>`;
-
 document.getElementById("full").innerHTML=G.map(([date,games,rest],i)=>{
   const d=new Date(date+"T12:00:00");
   return `<div class="gi"><h3>${i+1}ª giornata · sab ${d.getDate()} ${MESI[d.getMonth()]}</h3><ul>${games.map(p=>`<li class="${p.includes(US)?"us":""}">${NICE[p[0]]} – ${NICE[p[1]]}</li>`).join("")}<li class="${rest===US?"us":""}">Riposa: ${NICE[rest]}</li></ul></div>`;
 }).join("");
-
 document.getElementById("campi").innerHTML=Object.entries(CAMPI).map(([k,c])=>`<div class="c${k===US?" us":""}"><strong>${NICE[k]}</strong>${esc(c.n)} · ore ${c.o}<br><a class="where" href="${maps(c)}" target="_blank" rel="noopener">${esc(c.a)}, ${esc(c.l)}</a>${c.t?` · <span class="time">${c.t}</span>`:""}</div>`).join("");
+
+/* ---------- CATECHISMO ---------- */
+const LUOGHI={
+  SV:{n:"Sacro Volto",q:"Parrocchia Sacro Volto Milano"},
+  SMF:{n:"Santa Maria alla Fontana",q:"Santa Maria alla Fontana Milano"}
+};
+const qmap=q=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+document.getElementById("map-sv").href=qmap(LUOGHI.SV.q);
+document.getElementById("map-smf").href=qmap(LUOGHI.SMF.q);
+const TIPI={k:"Bambini",gg:"Con genitori",ini:"",fam:"Famiglie",festa:"Comunità"};
+/* [data, tipo, ora inizio, ora fine, luogo, titolo, nota] */
+const C=[
+ ["2026-10-04","festa","","","","Festa di avvio di tutti i cammini di fede","Pranzo comunitario e flashback sull'oratorio estivo."],
+ ["2026-10-17","k","9:30","12:00","SV","Introduzione al rinnovo delle promesse battesimali","Alla scoperta della chiesa del Sacro Volto."],
+ ["2026-10-25","festa","","","","San Fortunato","Festa dei chiostri e degli anniversari di matrimonio."],
+ ["2026-10-25","gg","14:30","17:30","SV","Il Battesimo e la Chiesa","Partenza per la visita alla basilica di San Vincenzo in Prato, con il rinnovo delle promesse del Battesimo."],
+ ["2026-11-01","festa","","","","Domenica insieme","Pranzo condiviso, giochi con sfida genitori-figli, preghiera conclusiva."],
+ ["2026-11-15","gg","9:30","11:30","SV","1ª domenica di Avvento · catechesi e Messa","Gesù e il Primo Testamento."],
+ ["2026-11-16","fam","19:00","","SMF","Preghiera di ingresso in Avvento","Con benedizione delle famiglie. Ripetuta martedì 17."],
+ ["2026-11-17","fam","19:00","","SMF","Preghiera di ingresso in Avvento","Con benedizione delle famiglie. Stessa preghiera di lunedì 16."],
+ ["2026-11-28","k","9:30","12:30","SV","Noè, la Torre di Babele, Abramo, Mosè, il re Davide",""],
+ ["2026-12-03","ini","17:30","18:30","SV","La porta, la strada e la casa","Iniziativa di Avvento."],
+ ["2026-12-09","ini","17:30","18:30","SV","La luce, le stelle e gli angeli","Iniziativa di Avvento."],
+ ["2026-12-12","k","9:30","12:00","SV","Alla scoperta di Santa Maria alla Fontana e del Santuario",""],
+ ["2026-12-15","ini","17:30","18:30","SV","I pastori e la Natività","Iniziativa di Avvento."],
+ ["2026-12-20","festa","","","","Domenica insieme","Pranzo condiviso, biscotti di Natale, film e preghiera. Dopo la Messa benedizione del Gesù Bambino del presepe di casa: portatelo."],
+ ["2026-12-24","fam","18:00","","SV · SMF","Messa della vigilia di Natale","Celebrata alla stessa ora in entrambe le chiese."],
+ ["2026-12-25","festa","","","","Natale di Nostro Signore",""],
+ ["2027-01-10","gg","17:30","18:30","SV","Battesimo dei bambini non ancora battezzati","Insieme alla 4ª elementare e ai genitori."],
+ ["2027-01-30","k","9:30","12:00","SV","La Palestina al tempo di Gesù","Geografia, storia e religione."],
+ ["2027-01-31","festa","","","","Festa della Sacra Famiglia",""],
+ ["2027-02-07","festa","","","","Domenica insieme","Pranzo condiviso, giochi e maschere di carnevale, preghiera conclusiva."],
+ ["2027-02-07","gg","9:30","11:30","SV","Catechesi e Messa","Gesù: da Betlemme a Nazareth."],
+ ["2027-02-14","festa","","","","1ª domenica di Quaresima",""],
+ ["2027-02-22","fam","19:00","","SMF","Preghiera di ingresso in Quaresima","Ripetuta martedì 23."],
+ ["2027-02-23","fam","19:00","","SMF","Preghiera di ingresso in Quaresima","Stessa preghiera di lunedì 22."],
+ ["2027-03-04","ini","17:30","18:30","SV","Iniziativa di Quaresima",""],
+ ["2027-03-06","k","9:30","12:00","SV","Il battesimo al Giordano e la chiamata dei Dodici",""],
+ ["2027-03-10","ini","17:30","18:30","SV","Iniziativa di Quaresima",""],
+ ["2027-03-16","ini","17:30","18:30","SV","Iniziativa di Quaresima",""],
+ ["2027-03-21","fam","10:00","","SV","Domenica delle Palme · processione","Alle 10:30 c'è la processione anche a Santa Maria alla Fontana."],
+ ["2027-03-21","gg","14:00","18:30","SV","Incontro con l'Arcivescovo a San Siro","Partenza dal Sacro Volto per lo stadio Meazza."],
+ ["2027-03-22","fam","17:00","","SV","Preghiera della Settimana Santa",""],
+ ["2027-03-23","fam","17:00","","SV","Preghiera della Settimana Santa",""],
+ ["2027-03-24","fam","17:00","","SV","Preghiera della Settimana Santa",""],
+ ["2027-03-26","k","10:30","","SV","Via Crucis","Venerdì Santo."],
+ ["2027-03-28","festa","","","","Pasqua","Messe secondo l'orario festivo."],
+ ["2027-04-04","gg","9:30","11:30","SV","Catechesi e Messa","Gesù in Galilea: la proclamazione del Regno di Dio."],
+ ["2027-04-25","gg","9:30","11:30","SV","Catechesi e Messa","Gesù a Gerusalemme: lo scontro con i capi e la passione."],
+ ["2027-05-15","k","9:30","12:00","SV","Prove della rappresentazione \"Ultimi giorni di Gesù\"",""],
+ ["2027-05-29","gg","9:30","12:00","SV","Rappresentazione \"Ultimi giorni di Gesù\"","Genitori invitati."],
+ ["2027-06-06","festa","11:00","","SMF","Festa conclusiva dei cammini di fede","Messa per tutti e lancio del messaggio di pace."]
+];
+const FILTRI={all:()=>true,kid:t=>t==="k"||t==="gg"||t==="ini",gg:t=>t==="gg"};
+let filtro="all";
+try{const f=localStorage.getItem("cat-filtro"); if(f&&FILTRI[f]) filtro=f;}catch(e){}
+
+function pillTipo(t,date){
+  if(t==="ini") return `<span class="pill ini">${date<"2027-01-01"?"Avvento":"Quaresima"}</span>`;
+  return `<span class="pill ${t}">${TIPI[t]}</span>`;
+}
+function luogo(l){
+  if(!l) return "";
+  return l.split(" · ").map(k=>LUOGHI[k]?`<a href="${qmap(LUOGHI[k].q)}" target="_blank" rel="noopener">${LUOGHI[k].n}</a>`:esc(k)).join(" o ");
+}
+function renderCat(){
+  document.querySelectorAll(".chips button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.f===filtro));
+  const rows=C.filter(e=>FILTRI[filtro](e[1]));
+  let nextIdx=rows.findIndex(e=>new Date(e[0]+"T12:00:00")>=today && e[1]!=="festa");
+  if(nextIdx<0) nextIdx=rows.findIndex(e=>new Date(e[0]+"T12:00:00")>=today);
+  let out="", lastM="";
+  rows.forEach(([date,t,h1,h2,l,title,note],i)=>{
+    const d=new Date(date+"T12:00:00"), past=d<today, isNext=i===nextIdx;
+    const mk=MESI_L[d.getMonth()]+" "+d.getFullYear();
+    if(mk!==lastM){ out+=`<div class="mh">${mk}</div>`; lastM=mk; }
+    const ora=h1?`<span class="time">${h2?`${h1}–${h2}`:`ore ${h1}`}</span>`:"";
+    out+=`<article class="m${isNext?" next":""}${past?" past":""}"><div class="d"><span class="g">${GIORNI[d.getDay()]}</span><span class="n">${d.getDate()}</span><span class="mo">${MESI[d.getMonth()]}</span></div><div class="info">
+      <div class="row">${pillTipo(t,date)}${isNext?'<span class="pill prox">Prossimo</span>':""}${ora}</div>
+      <div class="vs">${esc(title)}</div>
+      ${note?`<div class="where">${esc(note)}</div>`:""}
+      ${l?`<div class="where">${luogo(l)}</div>`:""}
+    </div></article>`;
+  });
+  document.getElementById("cat").innerHTML=`<div class="list">${out||'<p class="where">Nessun appuntamento.</p>'}</div>`;
+  const nx=document.querySelector("#cat .m.next");
+  return nx;
+}
+document.querySelectorAll(".chips button").forEach(b=>b.addEventListener("click",()=>{
+  filtro=b.dataset.f; try{localStorage.setItem("cat-filtro",filtro)}catch(e){} renderCat();
+}));
+renderCat();
 </script>
 
 </body>
