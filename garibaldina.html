@@ -44,6 +44,7 @@ h2{font-size:1.35rem;text-transform:uppercase;letter-spacing:.04em}
 .tabs button[aria-selected="true"]{background:var(--fg);color:var(--bg)}
 .tabs button:focus-visible,.chips button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .panel{display:grid;gap:24px}
+[hidden]{display:none!important}
 .list{display:grid;gap:10px}
 .m{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
 .m.next{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
@@ -170,7 +171,7 @@ function show(t){
   });
 }
 TABS.forEach(x=>document.getElementById("tab-"+x).addEventListener("click",()=>{
-  show(x); try{history.replaceState(null,"","#"+x)}catch(e){location.hash=x}
+  show(x); window.scrollTo(0,0); try{history.replaceState(null,"","#"+x)}catch(e){location.hash=x}
 }));
 window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
 show(location.hash.slice(1));
